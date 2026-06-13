@@ -1,0 +1,104 @@
+{
+    "title": "Substack Scraper Input",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "startUrls": {
+            "title": "Start URLs",
+            "type": "array",
+            "description": "Substack URLs to scrape: publication homepages (subdomain or custom domain), individual post URLs, author profiles (https://substack.com/@handle), and open.substack.com share links. Leave empty only if you enable Discovery mode below.",
+            "editor": "requestListSources",
+            "prefill": [{ "url": "https://noahpinion.substack.com" }]
+        },
+        "mode": {
+            "title": "Scrape mode",
+            "type": "string",
+            "description": "What to scrape for each publication URL. 'posts' = publication metadata + all posts in the archive. 'publication' = publication metadata only. Post and author URLs are always scraped as posts/authors regardless of this setting ('author' is accepted as an alias of 'publication').",
+            "editor": "select",
+            "enum": ["posts", "publication", "author"],
+            "enumTitles": [
+                "Posts — full archive of each publication",
+                "Publication metadata only",
+                "Publication metadata only (legacy alias)"
+            ],
+            "default": "posts"
+        },
+        "maxPostsPerPublication": {
+            "title": "Max posts per publication",
+            "type": "integer",
+            "description": "Limit the number of posts scraped per publication (lower = cheaper runs). Set 0 to scrape the ENTIRE archive — large publications can have thousands of posts. Leaving the field empty uses the default of 50.",
+            "editor": "number",
+            "minimum": 0,
+            "default": 50
+        },
+        "includeContent": {
+            "title": "Include full post content",
+            "type": "boolean",
+            "description": "Fetch each post's full HTML + plain text body. Adds one request per post but gives you the actual article content.",
+            "editor": "checkbox",
+            "default": true
+        },
+        "includeComments": {
+            "title": "Include comments",
+            "type": "boolean",
+            "description": "Fetch the full comment thread for each post (adds one request per post). Note: every comment becomes a separate result in the dataset, and popular posts can have hundreds of comments.",
+            "editor": "checkbox",
+            "default": false
+        },
+        "onlyFreePosts": {
+            "title": "Only free posts",
+            "type": "boolean",
+            "description": "Skip paid/subscriber-only posts in publication archives (their bodies can't be fully scraped anyway). Post URLs given directly in Start URLs are always scraped.",
+            "editor": "checkbox",
+            "default": false
+        },
+        "searchQuery": {
+            "title": "Search query (optional)",
+            "type": "string",
+            "description": "Filter each publication archive by a search term. Only posts matching the term are scraped.",
+            "editor": "textfield"
+        },
+        "discoveryMode": {
+            "title": "Discovery mode",
+            "type": "string",
+            "description": "Auto-discover publications without providing URLs — seeds from 5 curated top publications and expands through each publication's /recommendations page until the limit below is hit. 'Search' additionally filters every discovered publication's archive by the Discovery query. Off by default: a discovery run scrapes MANY publications and produces a correspondingly large (and more expensive) dataset.",
+            "editor": "select",
+            "enum": ["none", "leaderboard", "search"],
+            "enumTitles": [
+                "Off — use Start URLs",
+                "Top publications (recommendation graph)",
+                "Search (discover + filter archives by keyword)"
+            ],
+            "default": "none",
+            "sectionCaption": "Discovery",
+            "sectionDescription": "Scrape many publications automatically instead of (or in addition to) Start URLs."
+        },
+        "discoveryQuery": {
+            "title": "Discovery query",
+            "type": "string",
+            "description": "Used with 'Search' Discovery mode: keyword used to filter the archive of each discovered publication. Ignored otherwise.",
+            "editor": "textfield",
+            "example": "AI"
+        },
+        "maxPublicationsToDiscover": {
+            "title": "Max publications to discover",
+            "type": "integer",
+            "description": "Cap on how many publications Discovery mode will feed into the scraper (the 5 seed publications count toward it; Start URLs do not). Lower = cheaper runs.",
+            "editor": "number",
+            "minimum": 1,
+            "maximum": 500,
+            "default": 25
+        },
+        "maxConcurrency": {
+            "title": "Max concurrency",
+            "type": "integer",
+            "description": "Parallel requests. Higher = faster runs; proxy rotation is handled automatically, but very aggressive settings can hit Substack rate limits.",
+            "editor": "number",
+            "minimum": 1,
+            "maximum": 25,
+            "default": 5,
+            "sectionCaption": "Performance"
+        }
+    },
+    "required": []
+}

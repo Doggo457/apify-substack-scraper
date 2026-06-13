@@ -1,0 +1,245 @@
+{
+    "actorSpecification": 1,
+    "name": "substack-scraper",
+    "title": "Substack Scraper",
+    "description": "Scrape Substack newsletters at scale: full post archives with article text, comments, author profiles, and publication stats like subscriber counts. Works with any Substack URL or custom domain. Fast API-based scraping with no browser, pay per result. Export to CSV, JSON, Excel, or API.",
+    "version": "1.1",
+    "meta": {
+        "templateId": "js-crawlee-cheerio"
+    },
+    "input": "./input_schema.json",
+    "output": "./output_schema.json",
+    "dockerfile": "./Dockerfile",
+    "minMemoryMbytes": 256,
+    "maxMemoryMbytes": 1024,
+    "defaultMemoryMbytes": 1024,
+    "storages": {
+        "dataset": {
+            "actorSpecification": 1,
+            "fields": {
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["post", "publication", "author", "comment"],
+                        "description": "Record discriminator"
+                    },
+                    "id": { "type": ["integer", "string", "null"] },
+                    "title": { "type": ["string", "null"] },
+                    "subtitle": { "type": ["string", "null"] },
+                    "slug": { "type": ["string", "null"] },
+                    "url": { "type": ["string", "null"] },
+                    "publication": { "type": ["string", "null"] },
+                    "publicationName": { "type": ["string", "null"] },
+                    "publishedAt": { "type": ["string", "null"], "format": "date-time" },
+                    "audience": { "type": ["string", "null"] },
+                    "isPaid": { "type": ["boolean", "null"] },
+                    "postType": { "type": ["string", "null"] },
+                    "coverImage": { "type": ["string", "null"] },
+                    "description": { "type": ["string", "null"] },
+                    "truncatedBodyText": { "type": ["string", "null"] },
+                    "bodyHtml": { "type": ["string", "null"] },
+                    "bodyText": { "type": ["string", "null"] },
+                    "wordcount": { "type": ["integer", "null"] },
+                    "reactionCount": { "type": ["integer", "null"] },
+                    "commentCount": { "type": ["integer", "null"] },
+                    "restacks": { "type": ["integer", "null"] },
+                    "author": { "type": ["string", "null"] },
+                    "authors": { "type": ["array", "null"] },
+                    "postTags": { "type": ["array", "null"] },
+                    "note": { "type": ["string", "null"] },
+                    "scrapedAt": { "type": "string", "format": "date-time" },
+                    "name": { "type": ["string", "null"] },
+                    "subdomain": { "type": ["string", "null"] },
+                    "customDomain": { "type": ["string", "null"] },
+                    "heroText": { "type": ["string", "null"] },
+                    "logoUrl": { "type": ["string", "null"] },
+                    "copyright": { "type": ["string", "null"] },
+                    "language": { "type": ["string", "null"] },
+                    "foundingPlanName": { "type": ["string", "null"] },
+                    "paidSubscribers": { "type": ["integer", "null"] },
+                    "totalSubscribers": { "type": ["integer", "null"] },
+                    "subscriberCountString": { "type": ["string", "null"] },
+                    "categoryName": { "type": ["string", "null"] },
+                    "createdAt": { "type": ["string", "null"], "format": "date-time" },
+                    "handle": { "type": ["string", "null"] },
+                    "bio": { "type": ["string", "null"] },
+                    "photoUrl": { "type": ["string", "null"] },
+                    "profileUrl": { "type": ["string", "null"] },
+                    "subscriptions": { "type": ["array", "null"] },
+                    "publications": { "type": ["array", "null"] },
+                    "postId": { "type": ["integer", "null"] },
+                    "postSlug": { "type": ["string", "null"] },
+                    "postTitle": { "type": ["string", "null"] },
+                    "parentId": { "type": ["integer", "null"] },
+                    "depth": { "type": ["integer", "null"] },
+                    "body": { "type": ["string", "null"] },
+                    "authorName": { "type": ["string", "null"] },
+                    "authorHandle": { "type": ["string", "null"] },
+                    "authorId": { "type": ["integer", "null"] }
+                }
+            },
+            "views": {
+                "posts": {
+                    "title": "Posts",
+                    "description": "Scraped articles. All record types share one dataset — filter exports by the `type` field (post / publication / author / comment); rows of other types show empty cells in this view.",
+                    "transformation": {
+                        "fields": [
+                            "type",
+                            "title",
+                            "subtitle",
+                            "author",
+                            "publication",
+                            "publicationName",
+                            "publishedAt",
+                            "url",
+                            "audience",
+                            "isPaid",
+                            "wordcount",
+                            "reactionCount",
+                            "commentCount",
+                            "restacks",
+                            "postTags",
+                            "coverImage",
+                            "bodyText",
+                            "scrapedAt"
+                        ]
+                    },
+                    "display": {
+                        "component": "table",
+                        "properties": {
+                            "type": { "label": "Type", "format": "text" },
+                            "title": { "label": "Title", "format": "text" },
+                            "subtitle": { "label": "Subtitle", "format": "text" },
+                            "author": { "label": "Author", "format": "text" },
+                            "publication": { "label": "Publication", "format": "text" },
+                            "publicationName": { "label": "Publication name", "format": "text" },
+                            "publishedAt": { "label": "Published", "format": "date" },
+                            "url": { "label": "URL", "format": "link" },
+                            "audience": { "label": "Audience", "format": "text" },
+                            "isPaid": { "label": "Paid?", "format": "boolean" },
+                            "wordcount": { "label": "Words", "format": "number" },
+                            "reactionCount": { "label": "Likes", "format": "number" },
+                            "commentCount": { "label": "Comments", "format": "number" },
+                            "restacks": { "label": "Restacks", "format": "number" },
+                            "postTags": { "label": "Tags", "format": "array" },
+                            "coverImage": { "label": "Cover", "format": "image" },
+                            "bodyText": { "label": "Body", "format": "text" },
+                            "scrapedAt": { "label": "Scraped", "format": "date" }
+                        }
+                    }
+                },
+                "publications": {
+                    "title": "Publications",
+                    "description": "Publication metadata records (type = publication).",
+                    "transformation": {
+                        "fields": [
+                            "type",
+                            "name",
+                            "subdomain",
+                            "customDomain",
+                            "url",
+                            "description",
+                            "categoryName",
+                            "language",
+                            "totalSubscribers",
+                            "paidSubscribers",
+                            "subscriberCountString",
+                            "logoUrl",
+                            "createdAt",
+                            "scrapedAt"
+                        ]
+                    },
+                    "display": {
+                        "component": "table",
+                        "properties": {
+                            "type": { "label": "Type", "format": "text" },
+                            "name": { "label": "Name", "format": "text" },
+                            "subdomain": { "label": "Subdomain", "format": "text" },
+                            "customDomain": { "label": "Custom domain", "format": "text" },
+                            "url": { "label": "URL", "format": "link" },
+                            "description": { "label": "Description", "format": "text" },
+                            "categoryName": { "label": "Category", "format": "text" },
+                            "language": { "label": "Language", "format": "text" },
+                            "totalSubscribers": { "label": "Subscribers", "format": "number" },
+                            "paidSubscribers": { "label": "Paid subs", "format": "number" },
+                            "subscriberCountString": { "label": "Subs (text)", "format": "text" },
+                            "logoUrl": { "label": "Logo", "format": "image" },
+                            "createdAt": { "label": "Created", "format": "date" },
+                            "scrapedAt": { "label": "Scraped", "format": "date" }
+                        }
+                    }
+                },
+                "authors": {
+                    "title": "Authors",
+                    "description": "Author profile records (type = author).",
+                    "transformation": {
+                        "fields": [
+                            "type",
+                            "name",
+                            "handle",
+                            "profileUrl",
+                            "bio",
+                            "photoUrl",
+                            "publications",
+                            "subscriptions",
+                            "scrapedAt"
+                        ]
+                    },
+                    "display": {
+                        "component": "table",
+                        "properties": {
+                            "type": { "label": "Type", "format": "text" },
+                            "name": { "label": "Name", "format": "text" },
+                            "handle": { "label": "Handle", "format": "text" },
+                            "profileUrl": { "label": "Profile", "format": "link" },
+                            "bio": { "label": "Bio", "format": "text" },
+                            "photoUrl": { "label": "Photo", "format": "image" },
+                            "publications": { "label": "Writes for", "format": "array" },
+                            "subscriptions": { "label": "Subscribes to", "format": "array" },
+                            "scrapedAt": { "label": "Scraped", "format": "date" }
+                        }
+                    }
+                },
+                "comments": {
+                    "title": "Comments",
+                    "description": "Comment records (type = comment), flattened from nested threads with depth/parentId.",
+                    "transformation": {
+                        "fields": [
+                            "type",
+                            "postTitle",
+                            "postSlug",
+                            "publication",
+                            "authorName",
+                            "authorHandle",
+                            "body",
+                            "depth",
+                            "parentId",
+                            "publishedAt",
+                            "reactionCount",
+                            "scrapedAt"
+                        ]
+                    },
+                    "display": {
+                        "component": "table",
+                        "properties": {
+                            "type": { "label": "Type", "format": "text" },
+                            "postTitle": { "label": "Post", "format": "text" },
+                            "postSlug": { "label": "Post slug", "format": "text" },
+                            "publication": { "label": "Publication", "format": "text" },
+                            "authorName": { "label": "Author", "format": "text" },
+                            "authorHandle": { "label": "Handle", "format": "text" },
+                            "body": { "label": "Comment", "format": "text" },
+                            "depth": { "label": "Depth", "format": "number" },
+                            "parentId": { "label": "Parent", "format": "number" },
+                            "publishedAt": { "label": "Posted", "format": "date" },
+                            "reactionCount": { "label": "Likes", "format": "number" },
+                            "scrapedAt": { "label": "Scraped", "format": "date" }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

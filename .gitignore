@@ -1,0 +1,19 @@
+# Dependencies
+node_modules
+
+# Apify / Crawlee local storage
+storage
+apify_storage
+crawlee_storage
+
+# Dataset exports
+dataset_*.json
+
+# Environment & secrets
+.env
+.env.*
+
+# Logs & OS files
+*.log
+.DS_Store
+Thumbs.db

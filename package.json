@@ -1,0 +1,20 @@
+{
+    "name": "substack-scraper",
+    "version": "1.0.0",
+    "type": "module",
+    "description": "Apify actor that scrapes Substack publications, posts, authors and comments via the public JSON API.",
+    "engines": {
+        "node": ">=20"
+    },
+    "dependencies": {
+        "apify": "^3.7.2",
+        "crawlee": "^3.17.0",
+        "cheerio": "^1.2.0"
+    },
+    "scripts": {
+        "start": "node src/main.js",
+        "test": "node --check src/main.js && node --check src/routes.js && node --check src/state.js && node scripts/check-classify.mjs"
+    },
+    "author": "Callum",
+    "license": "ISC"
+}

@@ -1,0 +1,37 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Output of Substack Scraper",
+    "description": "All scraped records are stored in the run's default dataset. Each record carries a `type` field (post / publication / author / comment) — filter on it to split record types. Per-type table views (Posts, Publications, Authors, Comments) are available in the Output tab.",
+    "properties": {
+        "results": {
+            "type": "string",
+            "title": "All records",
+            "description": "Every scraped record as JSON: posts (full article text, engagement metrics), publications (metadata, subscriber counts), author profiles, and comment threads. Distinguish records by the `type` field.",
+            "template": "{{links.apiDefaultDatasetUrl}}/items"
+        },
+        "posts": {
+            "type": "string",
+            "title": "Posts",
+            "description": "Records of type `post`: title, author, publish date, full HTML and plain-text body, word count, reactions, comments, restacks, tags, paywall status.",
+            "template": "{{links.apiDefaultDatasetUrl}}/items?view=posts"
+        },
+        "publications": {
+            "type": "string",
+            "title": "Publications",
+            "description": "Records of type `publication`: name, domain, description, language, subscriber counts (when public), creation date.",
+            "template": "{{links.apiDefaultDatasetUrl}}/items?view=publications"
+        },
+        "authors": {
+            "type": "string",
+            "title": "Authors",
+            "description": "Records of type `author`: name, handle, bio, photo, publications they write for and subscribe to.",
+            "template": "{{links.apiDefaultDatasetUrl}}/items?view=authors"
+        },
+        "comments": {
+            "type": "string",
+            "title": "Comments",
+            "description": "Records of type `comment`: flattened comment threads with body, author, depth, parent id, publish date, and reactions.",
+            "template": "{{links.apiDefaultDatasetUrl}}/items?view=comments"
+        }
+    }
+}
